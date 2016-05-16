@@ -13,18 +13,19 @@ import reddit.springboot.ranking.models.RedditPost;
 @RestController
 @RequestMapping(value="/reddit")
 public class RedditPostController {
+    
+    public RedditPostController() {
+        
+    }
 
     @RequestMapping(value="/search", method=RequestMethod.GET)
     public ArrayList<RedditPost> searchReddit(@RequestParam(value="search", required=false, defaultValue="Politics") String searchString) {
-        //ModelAndView mav = new ModelAndView("shop-new", "shop", new Shop());
-        //return mav;
-        System.out.println("search string >> " + searchString);
         ArrayList<RedditPost> posts = new ArrayList<RedditPost>();
         return posts;
     }
     
     @RequestMapping(value="/latestsubreddits", method=RequestMethod.GET)
-    public ArrayList<RedditPost> getLatestPosts() {
+    public ArrayList<RedditPost> getLatestPosts(@RequestParam(value="subreddit", required=false, defaultValue="Politics") String subreddit) {
         ArrayList<RedditPost> posts = new ArrayList<RedditPost>();
         return posts;
     }
@@ -38,7 +39,6 @@ public class RedditPostController {
     @RequestMapping(value="/subreddits", method=RequestMethod.GET)
     public ArrayList<RedditPost> getSubReddits(@RequestParam(value="name", required=false, defaultValue="Politics") String subredditName) {
         ArrayList<RedditPost> posts = new RedditCrawler().crawlReddits(subredditName);
-        System.out.println("subbreddit name >> " + subredditName);
         return posts;
     }
 }

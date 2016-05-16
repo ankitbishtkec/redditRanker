@@ -66,13 +66,19 @@ public class Indexer {
     }
     
     public void indexReddit(RedditPost post){
-        Document doc = getDocument(post);
-        try {
-            writer.addDocument(doc);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        
+        try{
+            Document doc = getDocument(post);
+            try {
+                writer.addDocument(doc);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }catch(TitleIDNullException e){
             e.printStackTrace();
         }
+        
     }
 
     public void indexRedditList(List<RedditPost> posts){
@@ -101,8 +107,9 @@ public class Indexer {
             q = new QueryParser("title", analyzer).parse(queryString);
             TopDocs topDocs = searcher.search(q, 100);
             for (ScoreDoc doc : topDocs.scoreDocs) {
-                System.out.println(" >> self text " + searcher.doc(doc.doc).get("title"));
-                System.out.println(" >> self text " + searcher.doc(doc.doc).get("id"));
+                System.out.println(" >> title " + searcher.doc(doc.doc).get("title"));
+                System.out.println(" >> id " + searcher.doc(doc.doc).get("id"));
+                //System.out.println(" >> self text " + searcher.doc(doc.doc).get("self_text"));
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -119,19 +126,18 @@ public class Indexer {
         return redditPosts;
     }
     
-    private Document getDocument(reddit.springboot.ranking.models.RedditPost post){
+    private Document getDocument(RedditPost post) throws TitleIDNullException{
         Document document = new Document();
-        Field contentField = new Field("title", post.getTitle()
-           , Field.Store.YES, Field.Index.ANALYZED);
-        Field redditPostId = new Field("id", post.getId(), Field.Store.YES, Field.Index.NOT_ANALYZED);
-        document.add(contentField);
-        document.add(redditPostId);
-        return document;
-    }
-    
-    public static void main(String[] args){
-        
-        
-        
+        if(post.getTitle()==null || post.getId() == null || post.getSelfText() == null){
+            throw new TitleIDNullException();
+        }else{
+            Field contentField = new Field("title", post.getTitle(), Field.Store.YES, Field.Index.ANALYZED);
+            Field redditPostId = new Field("id", post.getId(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            //Field redditSelfText = new Field("self_text", post.getSelfText(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.add(contentField);
+            document.add(redditPostId);
+            //document.add(redditSelfText);
+            return document;
+        }
     }
 }

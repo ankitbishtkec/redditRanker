@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "reddit_post")
 public class RedditPost {
-    
+
     @Id
     @GeneratedValue
     private String id;
@@ -36,74 +36,72 @@ public class RedditPost {
     private String name;
     private String url;
     private String distinguished;
-    
-    public RedditPost(){
-        
+
+    public RedditPost() {
+
     }
-    
-    public RedditPost(LinkedHashMap redditPost){
 
-    	try {
-            this.createdUtc = (Double)redditPost.get("created_utc");
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        
+    public RedditPost(LinkedHashMap redditPost) {
 
         try {
-            this.score = (Integer)redditPost.get("score");
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        this.domain = (String)redditPost.get("domain");
-
-        this.id = (String)redditPost.get("id");
-        
-        this.title = (String)redditPost.get("title");
-        this.author = (String)redditPost.get("author");
-        
-        try {
-            this.ups = (Integer)redditPost.get("ups");
-        }catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        
-        try {
-            this.downs = (Integer)redditPost.get("downs");
+            this.createdUtc = (Double) redditPost.get("created_utc");
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
         try {
-            this.numComments = (Integer)redditPost.get("num_comments");
+            this.score = (Integer) redditPost.get("score");
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        
-        this.permalink = (String)redditPost.get("permalink");
-        this.selfText = (String)redditPost.get("self_text");
-        this.link_flair_text = (String)redditPost.get("link_flair_text");
 
-        this.thumbnail = (String)redditPost.get("thumbnail");
+        this.domain = (String) redditPost.get("domain");
+
+        this.id = (String) redditPost.get("id");
+
+        this.title = (String) redditPost.get("title");
+        this.author = (String) redditPost.get("author");
 
         try {
-            this.subreddit_id = (String)redditPost.get("subreddit_id");
+            this.ups = (Integer) redditPost.get("ups");
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        
-        this.url = (String)redditPost.get("url");
+
+        try {
+            this.downs = (Integer) redditPost.get("downs");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.numComments = (Integer) redditPost.get("num_comments");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        this.permalink = (String) redditPost.get("permalink");
+        this.selfText = (String) redditPost.get("self_text");
+        this.link_flair_text = (String) redditPost.get("link_flair_text");
+
+        this.thumbnail = (String) redditPost.get("thumbnail");
+
+        try {
+            this.subreddit_id = (String) redditPost.get("subreddit_id");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        this.url = (String) redditPost.get("url");
     }
-    
+
     public RedditPost(String[] tokens) {
-        
+
         try {
             this.createdUtc = Double.parseDouble(tokens[0]);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        
 
         try {
             this.score = Integer.parseInt(tokens[1]);
@@ -120,13 +118,13 @@ public class RedditPost {
         }
         this.title = tokens[4];
         this.author = tokens[5];
-        
+
         try {
             this.ups = Integer.parseInt(tokens[6]);
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        
+
         try {
             this.downs = Integer.parseInt(tokens[7]);
 
@@ -140,7 +138,9 @@ public class RedditPost {
             e.printStackTrace();
         }
         this.permalink = tokens[9];
+
         this.selfText = tokens[10];
+
         this.link_flair_text = tokens[11];
 
         this.thumbnail = tokens[13];

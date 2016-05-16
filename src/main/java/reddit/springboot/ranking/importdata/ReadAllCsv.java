@@ -3,6 +3,7 @@ package reddit.springboot.ranking.importdata;
 import java.io.File;
 import java.util.ArrayList;
 
+import reddit.springboot.ranking.indexing.Indexer;
 import reddit.springboot.ranking.models.RedditPost;
 
 public class ReadAllCsv {
@@ -12,6 +13,7 @@ public class ReadAllCsv {
         ArrayList<File> files = getAllFilesInADirectory(path);
         ReadCsv readCsv = new ReadCsv();
         for(File file : files){
+            System.out.println("reading for file >> " + file.getAbsolutePath());
             if(file.exists()){
                 posts.addAll(readCsv.readCsv(file));
             }
@@ -32,7 +34,22 @@ public class ReadAllCsv {
     }
     
     public static void main(String[] args){
-        ArrayList<RedditPost> posts = new ReadAllCsv().readAllCSV("/home/spujari/dataset/reddit-top-2.5-million/data/");
+        /*ArrayList<RedditPost> posts = new ReadAllCsv().readAllCSV("/home/spujari/dataset/reddit-top-2.5-million/data/");
         System.out.println(" size posts >> " + posts.size());
+        Indexer indexer = new Indexer("./index4"); 
+        indexer.initWriter();
+        for(RedditPost post : posts){
+            if(post == null){
+                System.out.println("post null");
+                continue;
+            }else{
+                //System.out.println("post not null");
+            }
+            indexer.indexReddit(post);
+        }
+        indexer.closeWriter();*/
+    
+        Indexer indexer = new Indexer("./index4"); 
+        indexer.search("America");
     }
 }

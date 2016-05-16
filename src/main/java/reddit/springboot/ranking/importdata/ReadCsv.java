@@ -26,7 +26,7 @@ public class ReadCsv {
        ArrayList<RedditPost> redditPosts = new ArrayList<RedditPost>();
        try {
            CSVReader reader = new CSVReader(new FileReader(file));
-           System.out.println("reader.readNext() >> " + reader.readNext());
+           //System.out.println("reader.readNext() >> " + reader.readNext());
            List<String[]> allRecords = reader.readAll();
            for(String[] record : allRecords ){
                redditPosts.add(convertToRedditPost(record));
@@ -97,7 +97,7 @@ public class ReadCsv {
     		 redditRank.put(post.getId(), (double)post.getScore());
     	 }
     	 //redditRank = sortMap(redditRank);
-    	 System.out.println("reddit rank >> " + redditRank);
+    	 //System.out.println("reddit rank >> " + redditRank);
     	 return redditRank;
      }
      
