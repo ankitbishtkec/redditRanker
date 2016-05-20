@@ -16,10 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import reddit.springboot.ranking.importdata.ReadAllCsv;
+import reddit.springboot.ranking.indexing.Indexer;
 import reddit.springboot.ranking.models.RedditPost;
 
 public class SearchThroughReddit {
     
+	
+	Map<String, RedditPost> redditHashMap;
+	
+	public SearchThroughReddit() {
+		this.redditHashMap = this.getHashMap("", "");
+	}
+	
+	public ArrayList<RedditPost> searchRedditPosts (String searchString){
+		ArrayList<RedditPost> reddiPosts = new ArrayList<RedditPost>();
+		ArrayList<String> redditPostIds = new Indexer().search(searchString);
+		for(String redditPostId : redditPostIds){
+			reddiPosts.add(this.redditHashMap.get(redditPostId));
+		}
+		return reddiPosts;
+	}
+	
     public Map<String, RedditPost> getHashMap(String datasetPath, String serializedPath){
         if(new File(serializedPath).exists()){
             return deSerializeHashtagPosts(serializedPath);

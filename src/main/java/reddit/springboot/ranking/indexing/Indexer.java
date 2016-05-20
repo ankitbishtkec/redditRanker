@@ -87,9 +87,9 @@ public class Indexer {
         }
     }
     
-    public ArrayList<RedditPost> search(String queryString){
+    public ArrayList<String> search(String queryString){
         
-        ArrayList<RedditPost> redditPosts = new ArrayList<RedditPost>();
+        ArrayList<String> redditPostIds = new ArrayList<String>();
         Directory indexDirectory;
         
         try {
@@ -109,6 +109,7 @@ public class Indexer {
             for (ScoreDoc doc : topDocs.scoreDocs) {
                 System.out.println(" >> title " + searcher.doc(doc.doc).get("title"));
                 System.out.println(" >> id " + searcher.doc(doc.doc).get("id"));
+                redditPostIds.add(searcher.doc(doc.doc).get("id"));
                 //System.out.println(" >> self text " + searcher.doc(doc.doc).get("self_text"));
             }
         } catch (ParseException e) {
@@ -123,7 +124,7 @@ public class Indexer {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return redditPosts;
+        return redditPostIds;
     }
     
     private Document getDocument(RedditPost post) throws TitleIDNullException{

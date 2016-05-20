@@ -57,7 +57,7 @@ public class ReadCsv {
             indexer.indexReddit(post);
         }
         indexer.closeWriter();
-        posts = indexer.search("Happy Father");
+        ArrayList<String> reddiPostIds = indexer.search("Happy Father");
         
         /*ArrayList<RedditPost> trainSet = new ArrayList<RedditPost>();
         for(int i=0; i< posts.size() - TEST_SIZE; i++){

@@ -15,7 +15,6 @@ import reddit.springboot.ranking.models.RedditPost;
 public class RedditPostController {
     
     public RedditPostController() {
-        
     }
 
     @RequestMapping(value="/search", method=RequestMethod.GET)
@@ -41,4 +40,5 @@ public class RedditPostController {
         ArrayList<RedditPost> posts = new RedditCrawler().crawlReddits(subredditName);
         return posts;
     }
+    
 }
