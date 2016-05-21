@@ -117,7 +117,9 @@ public class Indexer {
                 System.out.println(" >> title " + searcher.doc(doc.doc).get("title"));
                 System.out.println(" >> id " + searcher.doc(doc.doc).get("id"));
                 String id = searcher.doc(doc.doc).get("id");
-                redditPosts.add(redditPostMap.get(id));
+                if(redditPostMap.keySet().contains(id)){
+                    redditPosts.add(redditPostMap.get(id));
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
