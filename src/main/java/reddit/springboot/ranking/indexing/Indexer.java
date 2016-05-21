@@ -1,10 +1,9 @@
 package reddit.springboot.ranking.indexing;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -16,7 +15,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.queryparser.xml.ParserException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -24,10 +22,11 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import org.springframework.stereotype.Component;
 
+import reddit.springboot.ranking.cleaner.SerializeRedditPost;
 import reddit.springboot.ranking.models.RedditPost;
+import reddit.springboot.ranking.ranking.Ranker;
 
 @Component
 public class Indexer {
@@ -37,13 +36,22 @@ public class Indexer {
     private IndexSearcher searcher;
     private TopScoreDocCollector docCollector;
     private String indexDirectoryPath;
-    
+    private static ArrayList<RedditPost> redditPosts;
+    private HashMap<String, RedditPost> redditPostMap;
     public Indexer() {
+        if(redditPostMap == null){
+            redditPostMap = SerializeRedditPost.getRedditIdRedditPostMap(SerializeRedditPost.getRedditPosts());
+        }
     }
     
     public Indexer(String indexDirectoryPath) {
         this.indexDirectoryPath = indexDirectoryPath;
+        if(redditPostMap == null){
+            redditPostMap = SerializeRedditPost.getRedditIdRedditPostMap(SerializeRedditPost.getRedditPosts());
+        }
     }
+    
+    
     
     public void initWriter(){
         try {
@@ -87,9 +95,9 @@ public class Indexer {
         }
     }
     
-    public ArrayList<String> search(String queryString){
+    public ArrayList<RedditPost> search(String queryString){
         
-        ArrayList<String> redditPostIds = new ArrayList<String>();
+        ArrayList<RedditPost> redditPosts = new ArrayList<RedditPost>();
         Directory indexDirectory;
         
         try {
@@ -98,7 +106,6 @@ public class Indexer {
             reader = DirectoryReader.open(indexDirectory);
             searcher = new IndexSearcher(reader);
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         
@@ -109,8 +116,8 @@ public class Indexer {
             for (ScoreDoc doc : topDocs.scoreDocs) {
                 System.out.println(" >> title " + searcher.doc(doc.doc).get("title"));
                 System.out.println(" >> id " + searcher.doc(doc.doc).get("id"));
-                redditPostIds.add(searcher.doc(doc.doc).get("id"));
-                //System.out.println(" >> self text " + searcher.doc(doc.doc).get("self_text"));
+                String id = searcher.doc(doc.doc).get("id");
+                redditPosts.add(redditPostMap.get(id));
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -124,7 +131,8 @@ public class Indexer {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return redditPostIds;
+        new Ranker().getRankedRedditPost(redditPosts);
+        return redditPosts;
     }
     
     private Document getDocument(RedditPost post) throws TitleIDNullException{

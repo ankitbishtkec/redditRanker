@@ -1,5 +1,6 @@
 package reddit.springboot.ranking.models;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "reddit_post")
-public class RedditPost {
+public class RedditPost implements Serializable {
 
     @Id
     @GeneratedValue
@@ -17,11 +18,14 @@ public class RedditPost {
     private String subbredditName;
     private double createdUtc;
     private int score;
+    private int ranker_score;
     private String domain;
     private String title;
     private String author;
     private int ups;
+    //private int predicted_ups;
     private int downs;
+    //private int predicted_downs;
     private int numComments;
     private String permalink;
     private String selfText;
@@ -36,7 +40,8 @@ public class RedditPost {
     private String name;
     private String url;
     private String distinguished;
-
+    
+    
     public RedditPost() {
 
     }
@@ -97,60 +102,20 @@ public class RedditPost {
 
     public RedditPost(String[] tokens) {
 
-        try {
-            this.createdUtc = Double.parseDouble(tokens[0]);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.score = Integer.parseInt(tokens[1]);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
+        this.createdUtc = Double.parseDouble(tokens[0]);
+        this.score = Integer.parseInt(tokens[1]);
         this.domain = tokens[2];
-
-        try {
-            this.id = tokens[3];
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        this.id = tokens[3];
         this.title = tokens[4];
         this.author = tokens[5];
-
-        try {
-            this.ups = Integer.parseInt(tokens[6]);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.downs = Integer.parseInt(tokens[7]);
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.numComments = Integer.parseInt(tokens[8]);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        this.ups = Integer.parseInt(tokens[6]);
+        this.downs = Integer.parseInt(tokens[7]);
+        this.numComments = Integer.parseInt(tokens[8]);
         this.permalink = tokens[9];
-
         this.selfText = tokens[10];
-
         this.link_flair_text = tokens[11];
-
         this.thumbnail = tokens[13];
-
-        try {
-            this.subreddit_id = tokens[14];
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
+        this.subreddit_id = tokens[14];
         this.edited = Boolean.parseBoolean(tokens[15]);
         this.link_flair_css_class = tokens[16];
         this.author_flair_css_class = tokens[17];
@@ -343,5 +308,29 @@ public class RedditPost {
     public void setSubbredditName(String subbreddit_name) {
         this.subbredditName = subbreddit_name;
     }
+
+    public int getRanker_score() {
+        return ranker_score;
+    }
+
+    public void setRanker_score(int predicted_score) {
+        this.ranker_score = predicted_score;
+    }
+
+/*    public int getPredicted_ups() {
+        return predicted_ups;
+    }
+
+    public void setPredicted_ups(int predicted_ups) {
+        this.predicted_ups = predicted_ups;
+    }
+
+    public int getPredicted_downs() {
+        return predicted_downs;
+    }
+
+    public void setPredicted_downs(int predicted_downs) {
+        this.predicted_downs = predicted_downs;
+    }*/
 
 }

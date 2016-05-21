@@ -30,10 +30,7 @@ public class SearchThroughReddit {
 	
 	public ArrayList<RedditPost> searchRedditPosts (String searchString){
 		ArrayList<RedditPost> reddiPosts = new ArrayList<RedditPost>();
-		ArrayList<String> redditPostIds = new Indexer().search(searchString);
-		for(String redditPostId : redditPostIds){
-			reddiPosts.add(this.redditHashMap.get(redditPostId));
-		}
+		ArrayList<RedditPost> redditPostIds = new Indexer().search(searchString);
 		return reddiPosts;
 	}
 	

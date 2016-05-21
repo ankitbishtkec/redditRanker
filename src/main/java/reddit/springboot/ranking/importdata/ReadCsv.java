@@ -22,14 +22,24 @@ public class ReadCsv {
         return readCsv(new File(filename));
     }
     
-    public ArrayList<RedditPost> readCsv(File file){
+    public static ArrayList<RedditPost> readCsv(File file){
        ArrayList<RedditPost> redditPosts = new ArrayList<RedditPost>();
        try {
            CSVReader reader = new CSVReader(new FileReader(file));
            //System.out.println("reader.readNext() >> " + reader.readNext());
            List<String[]> allRecords = reader.readAll();
            for(String[] record : allRecords ){
-               redditPosts.add(convertToRedditPost(record));
+               if(allRecords.indexOf(record) == 0){
+                   continue;
+               }
+               try{
+                   RedditPost post = convertToRedditPost(record);
+                   if(post != null){
+                       redditPosts.add(post);   
+                   }
+               }catch(NumberFormatException e){
+                   e.printStackTrace();
+               }
            }
        } catch (FileNotFoundException e) {
            e.printStackTrace();
@@ -39,7 +49,7 @@ public class ReadCsv {
        return redditPosts;
     }
     
-    public RedditPost convertToRedditPost(String[] tokens){
+    private static RedditPost convertToRedditPost(String[] tokens){
         if(tokens.length == 22){
             RedditPost redditPost = new RedditPost(tokens);
             return redditPost;
@@ -57,7 +67,7 @@ public class ReadCsv {
             indexer.indexReddit(post);
         }
         indexer.closeWriter();
-        ArrayList<String> reddiPostIds = indexer.search("Happy Father");
+        ArrayList<RedditPost> reddiPostIds = indexer.search("Happy Father");
         
         /*ArrayList<RedditPost> trainSet = new ArrayList<RedditPost>();
         for(int i=0; i< posts.size() - TEST_SIZE; i++){
